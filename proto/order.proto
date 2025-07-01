@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package order;
+
+option go_package = "clean-arch-rest/proto/order";
+
+service OrderService {
+  rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
+  rpc ListOrders(ListOrdersRequest) returns (ListOrdersResponse);
+}
+
+message CreateOrderRequest {
+  uint32 customer_id = 1;
+  double total = 2;
+  string status = 3;
+}
+
+message CreateOrderResponse {
+  uint32 id = 1;
+  uint32 customer_id = 2;
+  double total = 3;
+  string status = 4;
+  string created_at = 5;
+  string updated_at = 6;
+}
+
+message ListOrdersRequest {}
+
+message ListOrdersResponse {
+  repeated CreateOrderResponse orders = 1;
+} 

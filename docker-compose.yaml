@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: clean_arch_postgres
+    environment:
+      POSTGRES_DB: clean_arch_db
+      POSTGRES_USER: ramon
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    networks:
+      - clean_arch_network
+
+volumes:
+  postgres_data:
+
+networks:
+  clean_arch_network:
+    driver: bridge 

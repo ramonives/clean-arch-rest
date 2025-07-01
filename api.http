@@ -1,0 +1,25 @@
+### Criar uma nova order
+POST http://localhost:8080/order/
+Content-Type: application/json
+
+{
+    "customer_id": 1,
+    "total": 150.50,
+    "status": "pending"
+}
+
+### Listar todas as orders
+GET http://localhost:8080/order/
+
+### Criar outra order
+POST http://localhost:8080/order/
+Content-Type: application/json
+
+{
+    "customer_id": 2,
+    "total": 299.99,
+    "status": "completed"
+}
+
+### Listar orders novamente
+GET http://localhost:8080/order/ 
