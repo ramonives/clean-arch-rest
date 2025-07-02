@@ -1,4 +1,4 @@
-FROM golang:1.21-alpine AS builder
+FROM golang:1.23-alpine AS builder
 
 WORKDIR /app
 
@@ -11,12 +11,19 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
 FROM alpine:latest
 
-RUN apk --no-cache add ca-certificates
+# Instala as ferramentas necessárias
+RUN apk --no-cache add ca-certificates postgresql-client
 
 WORKDIR /root/
 
+# Copia o binário da aplicação
 COPY --from=builder /app/main .
+
+# Copia o script de espera
+COPY wait-for-db.sh .
+RUN chmod +x wait-for-db.sh
 
 EXPOSE 8080 9090 8081
 
-CMD ["./main"] 
+# Usa o script de espera como entrypoint
+CMD ["./wait-for-db.sh"] 

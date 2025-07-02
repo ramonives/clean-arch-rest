@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:15
@@ -15,6 +13,33 @@ services:
       - ./migrations:/docker-entrypoint-initdb.d
     networks:
       - clean_arch_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ramon -d clean_arch_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  app:
+    build: .
+    container_name: clean_arch_app
+    ports:
+      - "8080:8080"  # REST API
+      - "8081:8081"  # GraphQL
+      - "9090:9090"  # gRPC
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=ramon
+      - DB_PASSWORD=1234
+      - DB_NAME=clean_arch_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - clean_arch_network
+    restart: unless-stopped
 
 volumes:
   postgres_data:
